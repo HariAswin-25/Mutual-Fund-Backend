@@ -144,3 +144,28 @@ All endpoints support optional filtering via query parameters:
 FastAPI automatically generates documentation. Open your browser and navigate to:
 * **Swagger UI**: [http://127.0.0.1:8001/docs](http://127.0.0.1:8001/docs)
 * **ReDoc**: [http://127.0.0.1:8001/redoc](http://127.0.0.1:8001/redoc)
+
+---
+
+## Assumptions and Design Rationale
+
+* This backend is currently implemented as a read-only reporting API. All available endpoints are `GET` only, and there are no `POST`, `PUT`, or `DELETE` APIs for adding investors or mutual fund transactions.
+* The frontend does not offer a form or UI to add investors, new mutual fund schemes, or transaction records. This is intentional for the current prototype and is documented as a limitation.
+* The dataset is loaded directly from `dataset.csv` rather than a database because the current feature set only requires reading and aggregating static transaction records.
+  * The application is designed for quick dashboarding and exploratory reporting, not for transactional write operations or multi-user persistence.
+  * Using a CSV file keeps the backend lightweight and easier to deploy for this prototype, while still enabling date filtering, grouping, and numerical aggregation.
+* `python-multipart` was present in the original requirements but is not used by the current API implementation, so it has been removed from `requirements.txt`.
+
+### Why no database is used
+
+The backend currently reads and caches `dataset.csv` through `data_loader.py` and performs filtering and aggregation in memory. This approach is justified because:
+
+* The project currently targets read-only analytics over a static dataset.
+* There are no create/update/delete workflows yet, so persistence beyond the CSV file is not required.
+* A file-based dataset is sufficient for prototyping and for a small to moderate dataset size.
+
+If the application grows to support transaction entry, investor management, or concurrent users, a database should be added at that stage.
+
+## Swagger UI Screenshot
+
+![Swagger UI](./swagger-ui.png)
